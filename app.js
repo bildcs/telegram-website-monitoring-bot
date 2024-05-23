@@ -1,6 +1,6 @@
 const express = require('express')
 require('dotenv').config()
-const {start} = require('./Controller/BotController')
+const {start} = require('./src/bot')
 
 
 const app = express()
