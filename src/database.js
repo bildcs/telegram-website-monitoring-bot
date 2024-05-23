@@ -10,9 +10,10 @@ const db = new sqlite3.Database("./data/database.db",sqlite3.OPEN_READWRITE,(err
 db.serialize(() => { 
     db.run(`CREATE TABLE IF NOT EXISTS domains (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
-        domain TEXT NOT NULL UNIQUE,
+        uuid TEXT NOT NULL UNIQUE,
+        domain TEXT NOT NULL,
         user_id TEXT NOT NULL,
-        status INTEGER DEFAULT 0,
+        status BOOLEAN DEFAULT 1,
         last_check_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
     )`, (err) => {
