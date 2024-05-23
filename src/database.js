@@ -1,5 +1,4 @@
 const sqlite3 = require('sqlite3').verbose();
-let sql;
 
 
 const db = new sqlite3.Database("./data/database.db",sqlite3.OPEN_READWRITE,(err) => {
@@ -8,24 +7,28 @@ const db = new sqlite3.Database("./data/database.db",sqlite3.OPEN_READWRITE,(err
 });
 
 
-
-
-const domainTableSql = `
-CREATE TABLE IF NOT EXISTS domains (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    domain TEXT NOT NULL,
-    user_id TEXT NOT NULL,
-    last_check_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-`;
-db.run(domainTableSql, (err) => {
-    if (err) {
-        console.error("Error creating domains table:", err.message);
-    } else {
-        console.log("Domains table created successfully.");
-    }
+db.serialize(() => { 
+    db.run(`CREATE TABLE IF NOT EXISTS domains (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        domain TEXT NOT NULL UNIQUE,
+        user_id TEXT NOT NULL,
+        status INTEGER DEFAULT 0,
+        last_check_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+        added_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    )`, (err) => {
+        if (err) {
+            console.error('Error creating table:', err);
+        } else {
+            console.log('Table domains created or already exists.');
+        }
+    });
 });
+
+
+
+
+
+
 
 
 module.exports = db;
